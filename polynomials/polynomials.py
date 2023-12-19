@@ -4,7 +4,11 @@ import numbers as num
 class Polynomial:
 
     def __init__(self, coefs):
-        self.coefficients = coefs
+        if coefs[-1] == 0 and len(coefs) > 1:
+            coeffs = coefs[:-1]
+        else:
+            coeffs = coefs
+        self.coefficients = coeffs
 
     def degree(self):
         return len(self.coefficients) - 1
