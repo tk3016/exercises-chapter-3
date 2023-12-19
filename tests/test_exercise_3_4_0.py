@@ -12,7 +12,6 @@ def test_import():
 def test_equality():
     assert Polynomial((0, 1)) == Polynomial((0, 1))
 
-
 @pytest.mark.parametrize(
     "a, b, sum",
     (((0,), (0, 1), (0, 1)),

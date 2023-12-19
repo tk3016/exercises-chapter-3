@@ -50,3 +50,31 @@ class Polynomial:
 
     def __radd__(self, other):
         return self + other
+    
+    def neg_coefs(self):
+        coefs = (-1*x for x in self.coefficients)
+        return *coefs,
+
+    def __sub__(self, other):
+        if isinstance(other, Polynomial):
+            other_coef = other.neg_coefs()
+            other_poly = Polynomial(other_coef)
+            return self + other_poly
+        elif isinstance(other, Number):
+            other_num = -other
+            return self + other_num
+        else:
+            return NotImplemented
+    
+    def __rsub__(self, other):
+        if isinstance(other, Polynomial):
+            other_coef = other.neg_coefs()
+            other_poly = Polynomial(other_coef)
+            sub_poly = self + other_poly
+
+        elif isinstance(other, Number):
+            other_num = -other
+            sub_poly = self + other_num
+        sub_coefs = sub_poly.neg_coefs()
+        return Polynomial(sub_coefs)
+
