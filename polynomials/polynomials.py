@@ -77,4 +77,24 @@ class Polynomial:
             sub_poly = self + other_num
         sub_coefs = sub_poly.neg_coefs()
         return Polynomial(sub_coefs)
-
+            
+    
+    def __mul__(self,other):
+        if isinstance(other,Polynomial):
+            prod_coeff =  []
+            s = list(self.coefficients)
+            o = list(other.coefficients)
+            res = [0]*(len(s)+len(o)-1)
+            for o1,i1 in enumerate(s):
+                for o2,i2 in enumerate(o):
+                    res[o1+o2] += i1*i2
+            return Polynomial(tuple(res))
+        elif isinstance(other, Number):
+            coefs = (other*x for x in self.coefficients)
+            tup_coefs = *coefs,
+            return Polynomial(tup_coefs)
+        else:
+            return NotImplemented
+    
+    def __rmul__(self,other):
+        return self * other
