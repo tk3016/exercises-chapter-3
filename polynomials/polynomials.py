@@ -4,11 +4,14 @@ import numbers as num
 class Polynomial:
 
     def __init__(self, coefs):
-        if coefs[-1] == 0 and len(coefs) > 1:
-            coeffs = coefs[:-1]
+        if len(coefs) > 1:
+            if coefs[-1] == 0:
+                coeffs = coefs[:-1]
+            else:
+                coeffs = coefs
+            self.coefficients = coeffs
         else:
-            coeffs = coefs
-        self.coefficients = coeffs
+            self.coefficients = coefs
 
     def degree(self):
         return len(self.coefficients) - 1
@@ -17,13 +20,16 @@ class Polynomial:
         coefs = self.coefficients
         terms = []
 
-        if coefs[0]:
-            terms.append(str(coefs[0]))
-        if self.degree() and coefs[1]:
-            terms.append(f"{'' if coefs[1] == 1 else coefs[1]}x")
+        if not coefs:
+            terms.append("0")
+        else:
+            if coefs[0]:
+                terms.append(str(coefs[0]))
+            if self.degree() and coefs[1]:
+                terms.append(f"{'' if coefs[1] == 1 else coefs[1]}x")
 
-        terms += [f"{'' if c == 1 else c}x^{d}"
-                  for d, c in enumerate(coefs[2:], start=2) if c]
+            terms += [f"{'' if c == 1 else c}x^{d}"
+                    for d, c in enumerate(coefs[2:], start=2) if c]
 
         return " + ".join(reversed(terms)) or "0"
 
@@ -123,4 +129,26 @@ class Polynomial:
                 idx = list_coeff.index(i)
                 value +=  (scalar**idx)*i
             return value
+        
+    def dx(self):
+        if self.degree == 0:
+            return Polynomial((0,))
+        elif self.degree == 1:
+            coef = self.coefficients[-1]
+            return Polynomial((coef,))
+        else:
+            der_coef = []
+            coef = list(self.coefficients)
+            for i in range(1,len(coef)):
+                idx = coef[i]
+                der_coef.append(idx * i)
+            der_coef.append(0)
+            return Polynomial(tuple(der_coef))
+
+def derivative(a):
+    if not isinstance(a, Polynomial):
+        raise AssertionError('This method can only determine derivative of a polynomial object.')
+    else:
+        return a.dx()
+
         
