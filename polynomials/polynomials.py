@@ -1,4 +1,4 @@
-from numbers import Number
+import numbers as num
 
 
 class Polynomial:
@@ -41,7 +41,7 @@ class Polynomial:
 
             return Polynomial(coefs)
 
-        elif isinstance(other, Number):
+        elif isinstance(other, num.Number):
             return Polynomial((self.coefficients[0] + other,)
                               + self.coefficients[1:])
 
@@ -60,7 +60,7 @@ class Polynomial:
             other_coef = other.neg_coefs()
             other_poly = Polynomial(other_coef)
             return self + other_poly
-        elif isinstance(other, Number):
+        elif isinstance(other, num.Number):
             other_num = -other
             return self + other_num
         else:
@@ -72,7 +72,7 @@ class Polynomial:
             other_poly = Polynomial(other_coef)
             sub_poly = self + other_poly
 
-        elif isinstance(other, Number):
+        elif isinstance(other, num.Number):
             other_num = -other
             sub_poly = self + other_num
         sub_coefs = sub_poly.neg_coefs()
@@ -81,7 +81,6 @@ class Polynomial:
     
     def __mul__(self,other):
         if isinstance(other,Polynomial):
-            prod_coeff =  []
             s = list(self.coefficients)
             o = list(other.coefficients)
             res = [0]*(len(s)+len(o)-1)
@@ -89,7 +88,7 @@ class Polynomial:
                 for o2,i2 in enumerate(o):
                     res[o1+o2] += i1*i2
             return Polynomial(tuple(res))
-        elif isinstance(other, Number):
+        elif isinstance(other, num.Number):
             coefs = (other*x for x in self.coefficients)
             tup_coefs = *coefs,
             return Polynomial(tup_coefs)
@@ -98,3 +97,26 @@ class Polynomial:
     
     def __rmul__(self,other):
         return self * other
+    
+    def __pow__(self, other):
+       if not isinstance(other, num.Integral):
+           raise AssertionError('Exponent can only be an integer!')
+       elif other == 1:
+           return self
+       else:
+           exp_poly = self
+           for i in range(1,other):
+               exp_poly = self * exp_poly
+           return exp_poly
+
+    def __call__(self,scalar):
+        if not isinstance(scalar, num.Number):
+           raise AssertionError('Function can only be evaluated for a real number.')
+        else:
+            value = 0
+            list_coeff = list(self.coefficients)
+            for i in list_coeff:
+                idx = list_coeff.index(i)
+                value +=  (scalar**idx)*i
+            return value
+        
